@@ -10,7 +10,6 @@ uAddr uBase;
 
 void do_patch(HMODULE base) {
 	dprintf("Let's patch!\n");
-    printf("cocks!\n");
 
 	wchar_t szExePath[MAX_PATH];
 	GetModuleFileName(nullptr, szExePath, MAX_PATH);
