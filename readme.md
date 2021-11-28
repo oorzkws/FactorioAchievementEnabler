@@ -1,23 +1,12 @@
-# Dll Hijack Source Template
+# Factorio Achievement Enabler
 
-This is a *template*. To use it:
-1. Copy `main_dll\src\DoPatch.sample.cpp` to `main_dll\src\DoPatch.cpp`.
-2. `git submodule update --init --recursive`.
-3. Code.
+Built with CMake, VC++ configs might not work. In a hurry? Just grab the latest from [releases](/../../releases) and place it in the same folder as your Factorio.exe (Factorio\bin\x64).
 
-This project was created using Visual Studio 2015. You may get it working with previous version of Visual Studio.
-
-Other compiler such as `gcc` is not gonna work I believe; some api will be different.
-
-
-# Export Functions
-By default, it will export only `version.dll` when compile for x64 arch, however it for x86 it will export both  `version.dll` and `lpk.dll` for Windows XP legacy support.
-
-You can change its export in `_EXP_Control.h`.
-
-Or you can disable export, by `#define __NO_EXP`.
+This won't enable achievements on saves where cheats or console commands have been used, it only covers mods. Patches just pulled from IDA.
 
 
 # License
 
 Released under the MIT license - http://opensource.org/licenses/MIT
+
+Template thanks to [blaquee/dll-hijack](/../../../../../blaquee/dll-hijack)
