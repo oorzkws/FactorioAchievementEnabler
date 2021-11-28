@@ -4,6 +4,7 @@ Built with CMake, VC++ configs might not work. In a hurry? Just grab the latest 
 
 This won't enable achievements on saves where cheats or console commands have been used, it only covers mods. Patches just pulled from IDA.
 
+Updated as of Factorio **1.1.48**. If it doesn't work on the current version, please file an [issue](/../../issues/new) if there isn't one already.
 
 # License
 
