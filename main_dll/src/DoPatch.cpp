@@ -116,8 +116,11 @@ void do_patch(HMODULE base) {
   for (int i = 0; i < array_size; i++) {
     ubyte *search[] = {searches[i].data()};
     ubyte *patch[] = {patches[i].data()};
+    char char_i = static_cast<char>(i);
     if (engine->doSearchAndReplace(*search, *patch) == 0) {
-      dprintf("Didn't patch " + i + ".\n");
+      dprintf("Didn't patch %s .\n",&char_i);
+    }else{
+      dprintf("Patched %s .\n",&char_i);
     }
   }
 }
