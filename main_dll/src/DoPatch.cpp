@@ -1,16 +1,16 @@
 #include "Common.h"
 #include "DoPatch.h"
-#include "PatchUtil.h"
+//#include "PatchUtil.h"
 #include "SnR_Engine.h"
 #include "DetourXS/detourxs.h"
-#include "vector"
+#include <vector>
 
 #define __ENABLE_CONSOLE 1
 
 uAddr uBase;
 
 void do_patch(HMODULE base) {
-  dprintf("Let's patch!\n");
+  dprintf("do_patch called...\n");
 
   wchar_t szExePath[MAX_PATH];
   GetModuleFileName(nullptr, szExePath, MAX_PATH);
@@ -18,11 +18,11 @@ void do_patch(HMODULE base) {
   if (0 != wcscmp(wcsrchr(szExePath, L'\\'), L"\\factorio.exe")) {
     // Not my_target
     dwprintf(L"Is not my target: %s\n", wcsrchr(szExePath, L'\\') + 1);
+    fflush( stdout );
     return;
   }
   // Search and replace with generic patterns
   auto engine = new SnR_Engine::SnR_Engine(base);
-  const int array_size = 5;
   std::vector<std::vector<ubyte>> searches = {
       //1: AchievementStats::allowed
       {
@@ -113,14 +113,16 @@ void do_patch(HMODULE base) {
       },
   };
 
-  for (int i = 0; i < array_size; i++) {
+  int max_i = (int)(searches.size());
+
+  for (int i = 0; i < max_i; i++) {
     ubyte *search[] = {searches[i].data()};
     ubyte *patch[] = {patches[i].data()};
-    char char_i = static_cast<char>(i);
     if (engine->doSearchAndReplace(*search, *patch) == 0) {
-      dprintf("Didn't patch %s .\n",&char_i);
+      dprintf("Didn't patch %i of %i.\n", (i+1), max_i);
     }else{
-      dprintf("Patched %s .\n",&char_i);
+      dprintf("Patched %i of %i.\n", (i+1), max_i);
     }
   }
+  fflush( stdout );
 }

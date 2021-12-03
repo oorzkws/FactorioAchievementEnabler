@@ -32,7 +32,7 @@ void OpenConsole()
 		AllocConsole();
 	freopen_s(&stream, "CONOUT$", "w+", stdout);
 
-	dprintf("Fixing library import..\n");
+	dprintf("Fixing library import...\n");
 }
 
 void FixLibraryImport() {
@@ -65,7 +65,7 @@ void FixLibraryImport() {
 		i++;
 	}
 
-	dwprintf(L"Fix import for %s..\n", szDllName);
+	dwprintf(L"Fixing import for %s...\n", szDllName);
 
 #pragma region Restore API
 #ifdef __EXP_VERSION
@@ -321,7 +321,7 @@ void FixLibraryImport() {
 
 void StartPatch()
 {
-	dprintf("Call to do_patch ..\n");
+	dprintf("StartPatch called...\n");
 
 #ifdef __XP_PATCH_IN_THREAD
 	HMODULE hBase = GetModuleHandle(nullptr);
@@ -411,7 +411,7 @@ void FixSingleApi(LPCSTR lpProcName, uAddr fnEntry)
 	}
 	else
 	{
-		dprintf("Couldn't find export function %s: fnDest is null.\n", lpProcName);
+		//dprintf("Couldn't find export function %s: fnDest is null.\n", lpProcName);
 	}
 }
 
