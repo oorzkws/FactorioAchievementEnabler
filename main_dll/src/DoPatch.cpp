@@ -40,7 +40,7 @@ void do_patch(HMODULE base) {
       //3: AchievementGUI::AchievementGUI
       {
           SnR_Engine::SearchMode_Search, 9,
-          0x48, 0x3b, 0xc2, 0x0f, 0x84, 0xe4, 0x01, 0x00, 0x00,
+          0x48, 0x3b, 0xc2, 0x0f, 0x84, 0xdf, 0x01, 0x00, 0x00,
           SnR_Engine::SearchMode_EOF
       },
       //4: SteamContext::onUserStatsReceived
