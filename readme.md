@@ -1,7 +1,7 @@
 # Factorio Achievement Enabler
 
 ## Installation
-Grab the latest from [releases](/../../releases) and place it in the same folder as your Factorio.exe (Factorio\bin\x64). In Steam, add `cmd /c start %command%` as the launch options under the game properties.
+Grab the latest from [releases](/../../releases) and place the version.dll in the same folder as your Factorio.exe (Factorio\bin\x64). In Steam, add `cmd /c start %command%` as the launch options under the game properties.
 
 ![image](https://user-images.githubusercontent.com/65210810/175926763-35ef5ca0-0ce9-425e-a3b5-f1ef2bb4ee8c.png)
 
