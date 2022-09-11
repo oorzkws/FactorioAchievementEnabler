@@ -14,7 +14,7 @@ You can include a log by running `path/to/Factorio.exe > path/to/output.log`.
 Built with CMake, VC++ configs might not work.
 
 # GNU/Linux
-The method used by this project (byte patch via version.dll) is Windows specific. Builds will not work on GNU/Linux unless cross-compiled. For non-Windows users, you **may** have success importing the byte patches from [DoPatch.cpp](../../tree/master/main_dll/src/DoPatch.cpp) into something like [byte-pattern-patcher](../../../../ViRb3/byte-pattern-patcher/releases/latest) and applying it to the Factorio binary.
+The method used by this project (byte patch via version.dll) is Windows specific. Builds will not work on GNU/Linux unless cross-compiled and will not apply to Factorio's native GNU/Linux port.
 
 # License
 
