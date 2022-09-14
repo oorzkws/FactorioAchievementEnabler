@@ -1,9 +1,9 @@
 # Factorio Achievement Enabler
 
 ## Installation
-Grab the latest from [releases](/../../releases) and place the version.dll in the same folder as your Factorio.exe (Factorio\bin\x64). In Steam, add `cmd /c start %command%` as the launch options under the game properties.
+Grab the latest from [releases](/../../releases) and place the version.dll in the same folder as your Factorio.exe (Factorio\bin\x64). In Steam, add `cmd /c start "" %command%` as the launch options under the game properties.
 
-![image](https://user-images.githubusercontent.com/65210810/175926763-35ef5ca0-0ce9-425e-a3b5-f1ef2bb4ee8c.png)
+![image](https://user-images.githubusercontent.com/65210810/190045080-6ef99754-1c7c-4064-b51e-8cefe155660e.png)
 
 ## Notes
 This won't enable achievements on saves where cheats or console commands have been used, it only covers mods. Patches just pulled from IDA.
