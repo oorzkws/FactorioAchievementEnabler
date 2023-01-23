@@ -40,10 +40,11 @@ void do_patch(HMODULE base) {
           0x74, 0x06, 0x80, 0x79, 0x41, 0x00, 0x74, 0x06, 0x48, 0x83, 0xc0, 0x08, 0xeb, 0xe0,
           SnR_Engine::SearchMode_EOF
       },
-      //3: AchievementGUI::AchievementGUI, 48 3B C2 0F 84 DF 01 00 00
+      //3: AchievementGUI::AchievementGUI, 48 3B C2 0F 84 DF 01 00 00 48 8B
+      //If this matches more than once I need a better sig :^)
       {
           SnR_Engine::SearchMode_Search, 9,
-          0x48, 0x3b, 0xc2, 0x0f, 0x84, 0xdf, 0x01, 0x00, 0x00,
+          0x48, 0x3b, 0xc2, 0x0f, 0x84, 0xdf, 0x01, 0x00, 0x00, 0x48, 0x8b,
           SnR_Engine::SearchMode_EOF
       },
       //4: SteamContext::onUserStatsReceived, 8B ?? 08 ?? 3B ?? 74 22 48 8B 01 80 78
