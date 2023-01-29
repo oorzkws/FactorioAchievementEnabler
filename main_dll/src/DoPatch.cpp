@@ -43,7 +43,7 @@ void do_patch(HMODULE base) {
       //3: AchievementGUI::AchievementGUI, 48 3B C2 0F 84 DF 01 00 00 48 8B
       //If this matches more than once I need a better sig :^)
       {
-          SnR_Engine::SearchMode_Search, 9,
+          SnR_Engine::SearchMode_Search, 11,
           0x48, 0x3b, 0xc2, 0x0f, 0x84, 0xdf, 0x01, 0x00, 0x00, 0x48, 0x8b,
           SnR_Engine::SearchMode_EOF
       },
