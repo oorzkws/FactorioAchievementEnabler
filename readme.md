@@ -13,7 +13,7 @@ You can include a log by running `path/to/Factorio.exe > path/to/output.log`.
 
 **Please do not submit any bug reports to the Factorio team with this active. If you think you have found a base-game bug, verify with this patch removed before submitting a possibly invalid bugreport.**
 
-Built with CMake, VC++ configs might not work.
+Built with CMake, VC++ configs might not work. For some reason (I don't understand CMake) the `DetourXS` directory needs to be copied to the build dir.
 
 # GNU/Linux
 The method used by this project (byte patch via version.dll) is Windows specific. Builds will not work on GNU/Linux unless cross-compiled and will not apply to Factorio's native GNU/Linux port.
