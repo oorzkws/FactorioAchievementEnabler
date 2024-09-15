@@ -15,7 +15,7 @@ void do_patch(HMODULE base) {
   wchar_t szExePath[MAX_PATH];
   GetModuleFileName(nullptr, szExePath, MAX_PATH);
   dwprintf(L"szExePath: %s\n", szExePath);
-  if (0 != wcscmp(wcsrchr(szExePath, L'\\'), L"\\factorio.exe")) {
+  if (0 != _wcsicmp(wcsrchr(szExePath, L'\\'), L"\\factorio.exe")) {
     // Not my_target
     dwprintf(L"Is not my target: %s\n", wcsrchr(szExePath, L'\\') + 1);
     fflush( stdout );
