@@ -100,14 +100,18 @@ void do_patch(HMODULE base) {
           0x48, 0x8b, 0x02, 0x80, 0x78, 0x3e, 0x00, 0x74, 0x10, 0x80, 0x78, 0x40, 0x00, 0x74,
           SnR_Engine::SearchMode_EOF
       },
-      /* 8: ControlSettings:ControlSettings e8 4b 96 8c ff 84 c0 74 ??
-       * Once again, the call address is different during runtime
-       * call -> test -> jz (74 0F) -> xor -> lea r12+0B548 (the lea is our easy match)
+      /* 8: ControlSettings:ControlSettings 33 d2 48 8b c8 e8 ?? ?? ?? ?? 84 c0 74 ?? 33 [rest of pattern not necessary] d2 49 8d 8c 24 ?? ?? ?? ?? e8 ?? ?? ?? ??
        * This just skips the isVanilla call we break above :^)
        * I'm a good programmer sometimes, but not today */
       {
-          SnR_Engine::SearchMode_Search, 8,
-          0xe8, 0x4b, 0x96, 0x8c, 0xff, 0x84, 0xc0, 0x74,
+          SnR_Engine::SearchMode_Search, 6,
+          0x33, 0xd2, 0x48, 0x8b, 0xc8, 0xe8,
+          SnR_Engine::SearchMode_Skip, 4,
+          SnR_Engine::SearchMode_Search, 3,
+          0x84, 0xc0, 0x74,
+          SnR_Engine::SearchMode_Skip, 1,
+          SnR_Engine::SearchMode_Search, 1,
+          0x33,
           SnR_Engine::SearchMode_EOF
       },
   };
@@ -170,7 +174,7 @@ void do_patch(HMODULE base) {
       },
       //8
       {
-          SnR_Engine::SearchMode_Skip, 7,
+          SnR_Engine::SearchMode_Skip, 12,
           // jz -> jmp
           SnR_Engine::SearchMode_Replace, 1,
           0xEB,
