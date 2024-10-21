@@ -1,17 +1,19 @@
 # Factorio Achievement Enabler
 
 ## Installation
-Grab the latest from [releases](/../../releases) and place the version.dll in the same folder as your Factorio.exe (Factorio\bin\x64). In Steam, add `cmd /c start "" %command%` as the launch options under the game properties.
+Grab the latest from [releases](/../../releases) and place the version.dll in the same folder as your Factorio.exe (Factorio\bin\x64). 
+
+If you use Steam, add `cmd /c start "" %command%` as the launch options under the game properties.
 
 ![image](https://user-images.githubusercontent.com/65210810/190045080-6ef99754-1c7c-4064-b51e-8cefe155660e.png)
 
 ## Notes
 This won't enable achievements on saves where cheats or console commands have been used, it only covers mods. Patches just pulled from IDA.
 
-Updated as of Factorio **1.1.76**. If it doesn't work on the current version, please file an [issue](/../../issues/new) if there isn't one already.
+Updated as of Factorio **2.0.7**. If it doesn't work on the current version, please file an [issue](/../../issues/new) if there isn't one already.
 You can include a log by running `path/to/Factorio.exe > path/to/output.log`.
 
-**Please do not submit any bug reports to the Factorio team with this active. If you think you have found a base-game bug, verify with this patch removed before submitting a possibly invalid bugreport.**
+**Please do not submit any crash reports to the Factorio team with this active. If you think you have found a base-game crash, verify with this patch removed before submitting a possibly invalid bugreport.**
 
 Built with CMake, VC++ configs might not work. For some reason (I don't understand CMake) the `DetourXS` directory needs to be copied to the build dir.
 
