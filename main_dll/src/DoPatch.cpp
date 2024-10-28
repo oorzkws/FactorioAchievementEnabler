@@ -84,8 +84,8 @@ void do_patch(HMODULE base) {
           0x74, 0x22, 0x48, 0x8B, 0x01, 0x80, 0x78,
           SnR_Engine::SearchMode_EOF
       },
-      /* 6: SteamContext::setStat, SteamContext::unlockAchievement (2 matches), C2 74 1E 48 8B 08 80 79 3E 00 74 0C 80 79 40 00 74 06 80 79 41 00 74
-       * There's a third match here within ModManager::isVanilla
+      /* 6: SteamContext::setStat, C2 74 1E 48 8B 08 80 79 3E 00 74 0C 80 79 40 00 74 06 80 79 41 00 74
+       * There's a second match here within ModManager::isVanilla
        * isVanilla is only called (currently) to hide the "alternative reverse select" bind within the settings GUI
        * if we disable the check, it won't show even with mods enabled (breaking the default behavior)
        */
@@ -94,13 +94,19 @@ void do_patch(HMODULE base) {
           0xc2, 0x74, 0x1e, 0x48, 0x8b, 0x08, 0x80, 0x79, 0x3e, 0x00, 0x74, 0x0c, 0x80, 0x79, 0x40, 0x00, 0x74, 0x06, 0x80, 0x79, 0x41, 0x00, 0x74,
           SnR_Engine::SearchMode_EOF
       },
-      // 7: SteamContext::unlockAchievementsThatAreOnSteamButArentActivatedLocally, 48 8B 02 80 78 3E 00 74 10 80 78 40 00 74
+      // 7: SteamContext::unlockAchievement (changed in 2.0.11): C2 74 22 0F 1F 40 00 48 8B 08 80 79 3E 00 74 0C 80 79 40 00 74 06 80
+      {
+          SnR_Engine::SearchMode_Search, 23,
+          0xC2, 0x74, 0x22, 0x0F, 0x1F, 0x40, 0x00, 0x48, 0x8B, 0x08, 0x80, 0x79, 0x3E, 0x00, 0x74, 0x0C, 0x80, 0x79, 0x40, 0x00, 0x74, 0x06, 0x80,
+          SnR_Engine::SearchMode_EOF
+      },
+      // 8: SteamContext::unlockAchievementsThatAreOnSteamButArentActivatedLocally, 48 8B 02 80 78 3E 00 74 10 80 78 40 00 74
       {
           SnR_Engine::SearchMode_Search, 14,
           0x48, 0x8b, 0x02, 0x80, 0x78, 0x3e, 0x00, 0x74, 0x10, 0x80, 0x78, 0x40, 0x00, 0x74,
           SnR_Engine::SearchMode_EOF
       },
-      /* 8: ControlSettings:ControlSettings 33 d2 48 8b c8 e8 ?? ?? ?? ?? 84 c0 74 ?? 33 [rest of pattern not necessary] d2 49 8d 8c 24 ?? ?? ?? ?? e8 ?? ?? ?? ??
+      /* 9: ControlSettings:ControlSettings 33 d2 48 8b c8 e8 ?? ?? ?? ?? 84 c0 74 ?? 33 [rest of pattern not necessary] d2 49 8d 8c 24 ?? ?? ?? ?? e8 ?? ?? ?? ??
        * This just skips the isVanilla call we break above :^)
        * I'm a good programmer sometimes, but not today */
       {
@@ -166,13 +172,21 @@ void do_patch(HMODULE base) {
       },
       //7
       {
-          SnR_Engine::SearchMode_Skip, 13,
+          SnR_Engine::SearchMode_Skip, 14,
           // jz -> jmp
           SnR_Engine::SearchMode_Replace, 1,
           0xEB,
           SnR_Engine::SearchMode_EOF
       },
       //8
+      {
+          SnR_Engine::SearchMode_Skip, 13,
+          // jz -> jmp
+          SnR_Engine::SearchMode_Replace, 1,
+          0xEB,
+          SnR_Engine::SearchMode_EOF
+      },
+      //9
       {
           SnR_Engine::SearchMode_Skip, 12,
           // jz -> jmp
