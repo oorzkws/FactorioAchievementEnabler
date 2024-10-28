@@ -10,7 +10,7 @@ If you use Steam, add `cmd /c start "" %command%` as the launch options under th
 ## Notes
 This won't enable achievements on saves where cheats or console commands have been used, it only covers mods. Patches just pulled from IDA.
 
-Updated as of Factorio **2.0.7**. If it doesn't work on the current version, please file an [issue](/../../issues/new) if there isn't one already.
+If it doesn't work on the current version, please file an [issue](/../../issues/new) if there isn't one already.
 You can include a log by running `path/to/Factorio.exe > path/to/output.log`.
 
 **Please do not submit any crash reports to the Factorio team with this active. If you think you have found a base-game crash, verify with this patch removed before submitting a possibly invalid bugreport.**
