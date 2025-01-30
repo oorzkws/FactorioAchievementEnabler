@@ -27,11 +27,20 @@ void do_patch(HMODULE base) {
   // variant: 80 78 ?? ?? 74 ?? 80 78 ?? ?? 74 ?? 80 78 ?? ?? 0f 84 ?? ?? ?? ??
   // These two patterns will find most callsites checking for mods
   std::vector<std::vector<ubyte>> searches = {
-      // 1: AchievementStats::allowed (1 replacement), 48 8b 8f 50 04 00 00 48 85 c9 74 ??
+      // 1: AchievementStats::allowed (1 replacement), 80 bf [48 02] ?? ?? ?? 75 ?? 48 8b 8f [60 04] ?? ?? 48 85 c9 74 where [] indicates struct offsets (e.g. rdi+460h)
       // if (AssociatedContext) -> if (false). BUG: Trailing SearchMode_Skip makes match fail.
       {
-          SnR_Engine::SearchMode_Search, 11,
-          0x48, 0x8b, 0x8f, 0x50, 0x04, 0x00, 0x00, 0x48, 0x85, 0xc9, 0x74,
+          SnR_Engine::SearchMode_Search, 4,
+          0x80, 0xbf, 0x48, 0x02,
+          SnR_Engine::SearchMode_Skip, 3,
+          SnR_Engine::SearchMode_Search, 1,
+          0x75,
+          SnR_Engine::SearchMode_Skip, 1,
+          SnR_Engine::SearchMode_Search, 5,
+          0x48, 0x8b, 0x8f, 0x60, 0x04,
+          SnR_Engine::SearchMode_Skip, 2,
+          SnR_Engine::SearchMode_Search, 4,
+          0x48, 0x85, 0xc9, 0x74,
           SnR_Engine::SearchMode_EOF
       },
       /* 2: PlayerData::PlayerData (while loop), SteamContext::setStat, SteamContext::unlockAchievement (4 replacements total) 48 8B 08 80 79 ?? ?? 74 ?? 80 79 ?? ?? 74 ?? 80 79 ?? ?? 74 ??
@@ -126,7 +135,7 @@ void do_patch(HMODULE base) {
   std::vector<std::vector<ubyte>> patches = {
       //1
       {
-          SnR_Engine::SearchMode_Skip, 10,
+          SnR_Engine::SearchMode_Skip, 19,
           // jz -> jmp
           SnR_Engine::SearchMode_Replace, 1,
           0xEB,
