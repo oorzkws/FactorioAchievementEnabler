@@ -25,6 +25,7 @@ void do_patch(HMODULE base) {
   auto engine = new SnR_Engine::SnR_Engine(base);
   // 80 79 ?? ?? 74 ?? 80 79 ?? ?? 74 ?? 80 79 ?? ?? 74 ?? matches a set of 3 jz, the first two apply if not modded, the last if modded. Patch the first and the rest are skipped.
   // variant: 80 78 ?? ?? 74 ?? 80 78 ?? ?? 74 ?? 80 78 ?? ?? 0f 84 ?? ?? ?? ??
+  // e.g. `if ( *(_BYTE *)(*v3 + 0x3E) && *(_BYTE *)(v5 + 0x40) && !*(_BYTE *)(v5 + 0x41) )`
   // These two patterns will find most callsites checking for mods
   std::vector<std::vector<ubyte>> searches = {
       // 1: AchievementStats::allowed (1 replacement), 80 bf [48 02] ?? ?? ?? 75 ?? 48 8b 8f [60 04] ?? ?? 48 85 c9 74 where [] indicates struct offsets (e.g. rdi+460h)
@@ -43,10 +44,8 @@ void do_patch(HMODULE base) {
           0x48, 0x85, 0xc9, 0x74,
           SnR_Engine::SearchMode_EOF
       },
-      /* 2: PlayerData::PlayerData (while loop), SteamContext::setStat, SteamContext::unlockAchievement (4 replacements total) 48 8B 08 80 79 ?? ?? 74 ?? 80 79 ?? ?? 74 ?? 80 79 ?? ?? 74 ??
-       * There's an extra match here within ModManager::isVanilla
-       * isVanilla is only called (currently) to hide the "alternative reverse select" bind within the settings GUI
-       * if we disable the check, it won't show even with mods enabled (breaking the default behavior)
+      /* 2: PlayerData::PlayerData (while loop), SteamContext::setStat, SteamContext::unlockAchievement (3 replacements total) 48 8B 08 80 79 ?? ?? 74 ?? 80 79 ?? ?? 74 ?? 80 79 ?? ?? 74 ??
+       * mov this, [rax] / cmp byte ptr [this+3Eh], 0 / jz short / cmp byte ptr [this+40h], 0 / jz short / cmp byte ptr [this+41h], 0 / jz short
        */
       {
           SnR_Engine::SearchMode_Search, 5,
@@ -68,7 +67,7 @@ void do_patch(HMODULE base) {
           0x74,
           SnR_Engine::SearchMode_EOF
       },
-      // 3: PlayerData::PlayerData (for loop), SteamContext::unlockAchievementsThatAreOnSteamButArentActivatedLocally (2 replacements total), 49 3b d0 74 ?? 48 8b 02 80 78 [rest of pattern not necessary] ?? ?? 74 ?? 80 78 ?? ?? 74 ?? 80 78 ?? ?? 74 ??
+      // 3: PlayerData::PlayerData (for loop), 49 3b d0 74 ?? 48 8b 02 80 78 [rest of pattern not necessary] ?? ?? 74 ?? 80 78 ?? ?? 74 ?? 80 78 ?? ?? 74 ??
       {
           SnR_Engine::SearchMode_Search, 4,
           0x49, 0x3b, 0xd0, 0x74,
@@ -111,26 +110,20 @@ void do_patch(HMODULE base) {
           0x74, 0x22, 0x48, 0x8B, 0x01, 0x80, 0x78,
           SnR_Engine::SearchMode_EOF
       },
-      // 6: SteamContext::unlockAchievementsThatAreOnSteamButArentActivatedLocally, 48 8B 02 80 78 3E 00 74 10 80 78 40 00 74
+      /* 6: SteamContext::unlockAchievementsThatAreOnSteamButArentActivatedLocally, 48 8b 02 80 78 3E 00 74 ?? 80 78 40 00 74 ?? 80 78 41 00 75 ??
+       * Basically the same pattern as [2] but goes jz-jz-jnz instead of jz-jz-jz
+       * *v7 == 0x646F6D5F74736574LL seems to indicate an internal mod */
       {
-          SnR_Engine::SearchMode_Search, 14,
-          0x48, 0x8b, 0x02, 0x80, 0x78, 0x3e, 0x00, 0x74, 0x10, 0x80, 0x78, 0x40, 0x00, 0x74,
-          SnR_Engine::SearchMode_EOF
-      },
-      /* 7: ControlSettings:ControlSettings 33 d2 48 8b c8 e8 ?? ?? ?? ?? 84 c0 74 ?? 33 [rest of pattern not necessary] d2 49 8d 8c 24 ?? ?? ?? ?? e8 ?? ?? ?? ??
-       * This just skips the isVanilla call we break above :^)
-       * I'm a good programmer sometimes, but not today */
-      {
-          SnR_Engine::SearchMode_Search, 6,
-          0x33, 0xd2, 0x48, 0x8b, 0xc8, 0xe8,
-          SnR_Engine::SearchMode_Skip, 4,
-          SnR_Engine::SearchMode_Search, 3,
-          0x84, 0xc0, 0x74,
+          SnR_Engine::SearchMode_Search, 8,
+          0x48, 0x8b, 0x02, 0x80, 0x78, 0x3e, 0x00, 0x74,
           SnR_Engine::SearchMode_Skip, 1,
-          SnR_Engine::SearchMode_Search, 1,
-          0x33,
+          SnR_Engine::SearchMode_Search, 5,
+          0x80, 0x78, 0x40, 0x00, 0x74,
+          SnR_Engine::SearchMode_Skip, 1,
+          SnR_Engine::SearchMode_Search, 5,
+          0x80, 0x78, 0x41, 0x00, 0x75,
           SnR_Engine::SearchMode_EOF
-      },
+      }
   };
   std::vector<std::vector<ubyte>> patches = {
       //1
@@ -175,20 +168,12 @@ void do_patch(HMODULE base) {
       },
       //6
       {
-          SnR_Engine::SearchMode_Skip, 13,
+          SnR_Engine::SearchMode_Skip, 7,
           // jz -> jmp
           SnR_Engine::SearchMode_Replace, 1,
           0xEB,
           SnR_Engine::SearchMode_EOF
-      },
-      //7
-      {
-          SnR_Engine::SearchMode_Skip, 12,
-          // jz -> jmp
-          SnR_Engine::SearchMode_Replace, 1,
-          0xEB,
-          SnR_Engine::SearchMode_EOF
-      },
+      }
   };
 
   int max_i = (int)(searches.size());
