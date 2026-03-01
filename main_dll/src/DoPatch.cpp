@@ -28,18 +28,15 @@ void do_patch(HMODULE base) {
   // e.g. `if ( *(_BYTE *)(*v3 + 0x3E) && *(_BYTE *)(v5 + 0x40) && !*(_BYTE *)(v5 + 0x41) )`
   // These two patterns will find most callsites checking for mods
   std::vector<std::vector<ubyte>> searches = {
-      // 1: AchievementStats::allowed (1 replacement), 80 bf [48 02] ?? ?? ?? 75 ?? 48 8b 8f [60 04] ?? ?? 48 85 c9 74 where [] indicates struct offsets (e.g. rdi+460h)
+      // 1: AchievementStats::allowed (1 replacement), 80 bf [?? ??] ?? ?? ?? 75 CD 48 8b 8f [?? ??] ?? ?? 48 85 c9 74 where [] indicates offsets (e.g. rdi+460h)
       // if (AssociatedContext) -> if (false). BUG: Trailing SearchMode_Skip makes match fail.
       {
-          SnR_Engine::SearchMode_Search, 4,
-          0x80, 0xbf, 0x48, 0x02,
-          SnR_Engine::SearchMode_Skip, 3,
-          SnR_Engine::SearchMode_Search, 1,
-          0x75,
-          SnR_Engine::SearchMode_Skip, 1,
+          SnR_Engine::SearchMode_Search, 2,
+          0x80, 0xbf,
+          SnR_Engine::SearchMode_Skip, 5,
           SnR_Engine::SearchMode_Search, 5,
-          0x48, 0x8b, 0x8f, 0x60, 0x04,
-          SnR_Engine::SearchMode_Skip, 2,
+          0x75, 0xcd, 0x48, 0x8b, 0x8f,
+          SnR_Engine::SearchMode_Skip, 4,
           SnR_Engine::SearchMode_Search, 4,
           0x48, 0x85, 0xc9, 0x74,
           SnR_Engine::SearchMode_EOF
